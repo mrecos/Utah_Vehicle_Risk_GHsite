@@ -1,0 +1,216 @@
+<meta charset='utf-8' />
+<title>SLC motor vehicle collision risk</title>
+<meta name='viewport' content='width=device-width, initial-scale=1' />
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+
+<style>
+  body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+h1 {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+h2 {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: #53718f;
+}
+
+#console {
+  position: absolute;
+  width: 240px;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: white;
+}
+
+.session {
+  margin-bottom: 20px;
+}
+
+.row {
+  height: 12px;
+  width: 100%;
+}
+
+.colors {
+  background: linear-gradient(to right, 
+          #2d8fe2,
+          #90b4e9,
+          #d2dcee,
+          #fed4c3,
+          #ff996a,
+          #ff5600);
+  margin-bottom: 5px;
+}
+
+.label {
+  width: 15%;
+  display: inline-block;
+  text-align: center;
+}
+
+#play-button {
+            background: #ff5600;
+            padding-right: 26px;
+            border-radius: 3px;
+            border: none;
+            color: white;
+            margin: 0;
+            padding: 0 12px;
+            width: 60px;
+            cursor: pointer;
+            height: 30px;
+        }
+
+#play-button:hover {
+            background-color: #53718f;
+        }
+</style>
+
+<body>
+  <div id='map'></div>
+    <div id='console'>
+      <h1> Salt Lake City, UT</h1>
+      <h1>Vehicle collision risk</h1>
+      <p>Data: <a href='https://opendata.utah.gov/Public-Safety/State-of-Utah-Crash-Data-2015-2019/7ihm-46s4'>State of Utah Crash Data 2015-2019</a></p>
+      <div class="session">
+        <h2>Risk</h2>
+        <div class="row colors"></div>
+        <div class="row labels">
+          <div class="label">0</div>
+          <div class="label">1</div>
+          <div class="label">2</div>
+          <div class="label">3</div>
+          <div class="label">4</div>
+          <div class="label">5+</div>
+        </div>
+      </div>
+      <div class='session' id='sliderbar'>
+        <h2>Hour: <label id='active-hour'>12AM</label></h2>
+        <input id='slider' class='row' type='range' min='0' max='23' step='1' value='0' />
+      </div>
+      <!--<button id="play-button">Play</button>-->
+      <!--
+      <div class='session'>
+        <h2>Day of the week</h2>
+        <div class='row' id='filters'>
+          <input id='all' type='radio' name='toggle' value='all' checked='checked'>
+          <label for='all'>All</label>
+          <input id='weekday' type='radio' name='toggle' value='weekday'>
+          <label for='weekday'>Weekday</label>
+          <input id='weekend' type='radio' name='toggle' value='weekend'>
+          <label for='weekend'>Weekend</label>
+        </div>
+      </div>
+      -->
+    </div>
+    
+  <script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoibXJlY29zIiwiYSI6ImNrOGFmaWFxYjAwNWUzcXA3aXlvZnM5Z3EifQ.FSyd7hVbzJNnZWoKjg3QpQ';
+  
+  const map = new mapboxgl.Map({
+    container: 'map', // container element id
+    style: 'mapbox://styles/mrecos/cl1mju5zp000c14qi900cmkmd',
+    //style: 'mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y',
+    center: [  -111.85975414033183,40.74948980598118], 
+    zoom: 13,
+    pitch: 55,
+    bearing: 150,
+  });
+  map.on('load', () => {
+    let filterHour = ['==', ['number', ['get', 'Hour']], 12];
+    let filterDay = ['!=', ['string', ['get', 'Day']], 'placeholder'];
+    
+    map.addLayer({
+      id: 'collisions',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: './SLC_Fri_401k.geojson' // replace this with the url of your own geojson
+      },
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-width': 3,
+        'line-opacity': 0.75,
+        'line-color': [
+          'interpolate',
+          ['linear'],
+          ['number', ['get', 'RISK']],
+          0,
+          '#2d8fe2',
+          1,
+          '#90b4e9',
+          2,
+          '#d2dcee',
+          3,
+          '#fed4c3',
+          4,
+          '#ff996a',
+          5,
+          '#ff5600'
+        ]
+      },
+      'filter': ['all', filterHour, filterDay]
+    });
+      // update hour filter when the slider is dragged
+      document.getElementById('slider').addEventListener('input', (event) => {
+        const hour = parseInt(event.target.value);
+        // update the map
+        filterHour = ['==', ['number', ['get', 'Hour']], hour];
+        map.setFilter('collisions', ['all', filterHour, filterDay]);
+         
+        // converting 0-23 hour to AMPM format
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const hour12 = hour % 12 ? hour % 12 : 12;
+         
+        // update text in the UI
+        document.getElementById('active-hour').innerText = hour12 + ampm;
+      });
+      document.getElementById('filters').addEventListener('change', (event) => {
+        const day = event.target.value;
+        // update the map filter
+        if (day === 'all') {
+          filterDay = ['!=', ['string', ['get', 'Day']], 'placeholder'];
+        } else if (day === 'weekday') {
+          filterDay = ['match', ['get', 'Day'], ['Sat', 'Sun'], false, true];
+        } else if (day === 'weekend') {
+          filterDay = ['match', ['get', 'Day'], ['Sat', 'Sun'], true, false];
+        } else {
+          console.log('error');
+        }
+        map.setFilter('collisions', ['all', filterHour, filterDay]);
+      });
+    });
+
+  </script>
+
+</body>
+
+
+
+
+
+
+
