@@ -3,92 +3,12 @@
 <meta name='viewport' content='width=device-width, initial-scale=1' />
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
-
-<style>
-  body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-#map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-}
-
-h1 {
-  font-size: 20px;
-  line-height: 30px;
-}
-
-h2 {
-  font-size: 14px;
-  line-height: 20px;
-  margin-bottom: 10px;
-}
-
-a {
-  text-decoration: none;
-  color: #53718f;
-}
-
-#console {
-  position: absolute;
-  width: 240px;
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: white;
-}
-
-.session {
-  margin-bottom: 20px;
-}
-
-.row {
-  height: 12px;
-  width: 100%;
-}
-
-.colors {
-  background: linear-gradient(to right, 
-          #2d8fe2,
-          #90b4e9,
-          #d2dcee,
-          #fed4c3,
-          #ff996a,
-          #ff5600);
-  margin-bottom: 5px;
-}
-
-.label {
-  width: 15%;
-  display: inline-block;
-  text-align: center;
-}
-
-#play-button {
-            background: #ff5600;
-            padding-right: 26px;
-            border-radius: 3px;
-            border: none;
-            color: white;
-            margin: 0;
-            padding: 0 12px;
-            width: 60px;
-            cursor: pointer;
-            height: 30px;
-        }
-
-#play-button:hover {
-            background-color: #53718f;
-        }
-</style>
+<link href='www/style.css' rel='stylesheet' />
 
 <body>
   <div id='map'></div>
     <div id='console'>
+
       <h1> Salt Lake City, UT</h1>
       <h1>Vehicle collision risk</h1>
       <p>Data: <a href='https://opendata.utah.gov/Public-Safety/State-of-Utah-Crash-Data-2015-2019/7ihm-46s4'>State of Utah Crash Data 2015-2019</a></p>
@@ -108,20 +28,6 @@ a {
         <h2>Hour: <label id='active-hour'>12AM</label></h2>
         <input id='slider' class='row' type='range' min='0' max='23' step='1' value='0' />
       </div>
-      <!--<button id="play-button">Play</button>-->
-      <!--
-      <div class='session'>
-        <h2>Day of the week</h2>
-        <div class='row' id='filters'>
-          <input id='all' type='radio' name='toggle' value='all' checked='checked'>
-          <label for='all'>All</label>
-          <input id='weekday' type='radio' name='toggle' value='weekday'>
-          <label for='weekday'>Weekday</label>
-          <input id='weekend' type='radio' name='toggle' value='weekend'>
-          <label for='weekend'>Weekend</label>
-        </div>
-      </div>
-      -->
     </div>
     
   <script>

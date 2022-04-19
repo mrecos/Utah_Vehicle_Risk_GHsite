@@ -1,0 +1,115 @@
+  body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  
+  #map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  h1 {
+    font-size: 20px;
+    line-height: 30px;
+  }
+  
+  h2 {
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 10px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #53718f;
+  }
+  
+  #console {
+    position: absolute;
+    width: 240px;
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: white;
+  }
+  
+  .session {
+    margin-bottom: 20px;
+  }
+  
+  .row {
+    height: 12px;
+    width: 100%;
+  }
+  
+  .colors {
+    background: linear-gradient(to right, 
+            #2d8fe2,
+            #90b4e9,
+            #d2dcee,
+            #fed4c3,
+            #ff996a,
+            #ff5600);
+    margin-bottom: 5px;
+  }
+  
+  .label {
+    width: 15%;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  #play-button {
+              background: #ff5600;
+              padding-right: 26px;
+              border-radius: 3px;
+              border: none;
+              color: white;
+              margin: 0;
+              padding: 0 12px;
+              width: 60px;
+              cursor: pointer;
+              height: 30px;
+          }
+  
+  #play-button:hover {
+              background-color: #53718f;
+          }
+
+  .collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+  
+  .active, .collapsible:hover {
+    background-color: #555;
+  }
+  
+  .collapsible:after {
+    content: '\002B';
+    color: white;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
+  
+  .active:after {
+    content: "\2212";
+  }
+  
+  .content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+  }
